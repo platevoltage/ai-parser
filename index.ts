@@ -1,6 +1,7 @@
 import { exec } from "child_process";
 import express from "express";
 import fs from "fs/promises";
+import cors from "cors";
 
 // Files to pass to your parser.sh
 // const emailFile = "./email.html";
@@ -45,6 +46,7 @@ const PORT = 3010;
 
 // Parse JSON bodies
 // app.use(bodyParser.json());
+app.use(cors());
 app.use(express.text({ type: "*/*", limit: "10mb" }));
 app.post("/parse-email", async (req, res) => {
     const emailHtml = req.body;
