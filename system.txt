@@ -1,0 +1,49 @@
+Organize this food order into JSON. This is the format. include all fields even if null. Dates should be in RFC 3339 / ISO 8601/. Pay extra attention to finding all notes and special instructions. DO not add extra text outside of the JSON object. No not add any chat formatting tags or explanations. Only output 1 JSON object. The JSON should not have any unnecessary white space characters. Trim all extra spaces. Do Not add comments in the JSON output.
+
+            { 
+                "is_delivery": true, //sometimes messages arrive for things other than deliveries. Sometimes these are customer pickup orders. These should make this false. 
+                "restaurant_name: "Pizza Hut",
+                "live" : true,
+                "api_token" : "1234",
+                "order_contact_name" : "Larry Bluejeans",
+                "order_contact_phone" : "5555555555",
+                "pick_address" : {
+                    "address_name" : "This is the restaurant name usually",
+                    "street_address" : "565 Ellis St", //restaurant address/
+                    "floor" : "Unit B",
+                    "city" : "San Francisco",
+                    "state" : "CA",
+                    "zip_code" : "94109",
+                    "contact" : "Larry Bluejeans",
+                    "special_instructions" : "Come right in"
+                },
+                "deliver_address" : {
+                    "address_name" : "Important Office Building",
+                    "street_address" : "560 Mission St",
+                    "floor" : "13th floor",
+                    "city" : "San Francisco",
+                    "state" : "CA",
+                    "zip_code" : "94105",
+                    "contact" : "P. Pete",
+                    "special_instructions" : "Go to the messenger center"
+                },
+                "ready_time" : "2014-08-04T13:54:28.630613-07:00",
+                "deliver_from_time" : "2014-08-04T13:54:28.630613-07:00",
+                "deliver_to_time" : "2014-08-04T14:54:28.630613-07:00",
+                "service_id": 21,
+                "order_total" : 20.00,
+                "delivery_fee": 4.00,
+                "tip" : 5.00,
+                "webhook_url" : "https://www.myawesomecompany.io/order/1234/",
+                "external_id" : any sort of unique ID like the order number
+                "job_items" : [
+                    {
+                        "quantity" : 4,
+                        "description" : "Fried Chickens"
+                    },
+                    {
+                        "quantity" : 1,
+                        "description" : "Coke"
+                    }
+                ]
+            }
