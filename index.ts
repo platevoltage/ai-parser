@@ -7,37 +7,37 @@ import fs from "fs/promises";
 const systemFile = "./system.txt";
 
 
-function runParser(emailFile: string) {
+// function runParser(emailFile: string) {
 
-    return new Promise<string>((resolve, reject) => {
+//     return new Promise<string>((resolve, reject) => {
 
-        // Build the command
-        const cmd = `./parser.sh ${emailFile} ${systemFile}`;
+//         // Build the command
+//         const cmd = `./parser.sh ${emailFile} ${systemFile}`;
 
-        console.log(`Running parser: ${cmd}\n`);
+//         console.log(`Running parser: ${cmd}\n`);
 
-        // Execute the shell script
-        exec(cmd, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`Execution error: ${error.message}`);
-                reject(error);
-                return;
-            }
+//         // Execute the shell script
+//         exec(cmd, (error, stdout, stderr) => {
+//             if (error) {
+//                 console.error(`Execution error: ${error.message}`);
+//                 reject(error);
+//                 return;
+//             }
 
-            if (stderr) {
-                console.error(`Stderr: ${stderr}`);
-                reject(stderr);
-            }
+//             if (stderr) {
+//                 console.error(`Stderr: ${stderr}`);
+//                 reject(stderr);
+//             }
 
-            // Print stdout from parser.sh
-            console.log("Parser output:\n");
-            console.log(stdout);
-            resolve(stdout);
-        });
+//             // Print stdout from parser.sh
+//             console.log("Parser output:\n");
+//             console.log(stdout);
+//             resolve(stdout);
+//         });
 
-    });
+//     });
 
-}
+// }
 
 
 const app = express();
