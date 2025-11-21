@@ -46,37 +46,37 @@ const PORT = 3008;
 // Parse JSON bodies
 // app.use(bodyParser.json());
 app.use(express.text({ type: "*/*", limit: "10mb" }));
-app.post("/parse-email", async (req, res) => {
-    const emailHtml = req.body;
+// app.post("/parse-email", async (req, res) => {
+//     const emailHtml = req.body;
 
-    if (!emailHtml) {
-        return res.status(400).json({ error: "Missing emailHtml in request body" });
-    }
+//     if (!emailHtml) {
+//         return res.status(400).json({ error: "Missing emailHtml in request body" });
+//     }
 
-    const tmpFile = `./${crypto.randomUUID()}.html`;
+//     const tmpFile = `./${crypto.randomUUID()}.html`;
 
-    // Write email HTML to temp file for parser.sh
-    // console.log(emailHtml);
-    await fs.writeFile(tmpFile, emailHtml);
+//     // Write email HTML to temp file for parser.sh
+//     // console.log(emailHtml);
+//     await fs.writeFile(tmpFile, emailHtml);
 
-    // Run the parser
-    try {
-        const json = await runParser(tmpFile);
-        const parsedJson = JSON.parse(json);
-        console.log(parsedJson);
+//     // Run the parser
+//     try {
+//         const json = await runParser(tmpFile);
+//         const parsedJson = JSON.parse(json);
+//         console.log(parsedJson);
 
-        // Placeholder: run your parser here
-        // For now, just echo the email HTML
-        res.json({
-            // message: "Received email",
-            jobject: parsedJson ?? json
-        });
-    } catch (error) {
-        res.status(500).json({ error: "Error parsing email", details: error });
-    } finally {
-        fs.rm(tmpFile)
-    }
-});
+//         // Placeholder: run your parser here
+//         // For now, just echo the email HTML
+//         res.json({
+//             // message: "Received email",
+//             jobject: parsedJson ?? json
+//         });
+//     } catch (error) {
+//         res.status(500).json({ error: "Error parsing email", details: error });
+//     } finally {
+//         fs.rm(tmpFile)
+//     }
+// });
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
