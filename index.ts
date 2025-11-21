@@ -1,10 +1,10 @@
-import { exec } from "child_process";
+// import { exec } from "child_process";
 import express from "express";
-import fs from "fs/promises";
+// import fs from "fs/promises";
 
 // Files to pass to your parser.sh
 // const emailFile = "./email.html";
-const systemFile = "./system.txt";
+// const systemFile = "./system.txt";
 
 
 // function runParser(emailFile: string) {
