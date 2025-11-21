@@ -41,7 +41,7 @@ function runParser(emailFile: string) {
 
 
 const app = express();
-const PORT = 3000;
+const PORT = 3008;
 
 // Parse JSON bodies
 // app.use(bodyParser.json());
