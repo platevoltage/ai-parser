@@ -41,7 +41,7 @@ import express from "express";
 
 
 const app = express();
-const PORT = 3008;
+const PORT = 3010;
 
 // Parse JSON bodies
 // app.use(bodyParser.json());
