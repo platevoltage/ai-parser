@@ -45,7 +45,7 @@ const PORT = 3008;
 
 // Parse JSON bodies
 // app.use(bodyParser.json());
-app.use(express.text({ type: "*/*", limit: "10mb" }));
+// app.use(express.text({ type: "*/*", limit: "10mb" }));
 // app.post("/parse-email", async (req, res) => {
 //     const emailHtml = req.body;
 
