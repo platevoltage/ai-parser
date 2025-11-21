@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Email Parser</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+            background: #2a2a2a;
+            color: white;
+        }
+
+        textarea {
+            background: #1d1d1d;
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            font-size: 14px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            color: white;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        #response {
+            margin-top: 20px;
+            padding: 10px;
+            background: #1d1d1d;
+            border: 1px solid #ccc;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Email Parser</h2>
+    <textarea id="emailInput" placeholder="Paste your email HTML here"></textarea>
+    <br>
+    <button id="submitBtn">Submit</button>
+
+    <pre><div id="response">Response will appear here...</div></pre>
+
+    <script>
+        document.getElementById('submitBtn').addEventListener('click', async () => {
+            const emailHtml = document.getElementById('emailInput').value;
+            const responseDiv = document.getElementById('response');
+            responseDiv.textContent = "Processing...";
+
+            try {
+                const res = await fetch('http://ai-parser.home.jgarrettcorbin.com/parse-email/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: emailHtml
+                });
+
+                if (!res.ok) {
+                    responseDiv.textContent = `Error: ${res.status} ${res.statusText}`;
+                    return;
+                }
+
+                const data = await res.json();
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (err) {
+                responseDiv.textContent = 'Request failed: ' + err;
+            }
+        });
+    </script>
+
+</body>
+
+</html>
