@@ -65,11 +65,13 @@ app.post("/parse-email", async (req, res) => {
         const parsedJson = JSON.parse(json);
         console.log(parsedJson);
 
-        // Placeholder: run your parser here
-        // For now, just echo the email HTML
+
+
         res.json({
             // message: "Received email",
-            jobject: parsedJson ?? json
+            is_delivery: parsedJson?.is_delivery ?? false,
+            identifier: parsedJson?.restaurant_name + " " + parsedJson?.pick_address.street_address,
+            job: parsedJson ?? json,
         });
     } catch (error) {
         res.status(500).json({ error: "Error parsing email", details: error });
