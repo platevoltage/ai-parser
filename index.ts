@@ -3,14 +3,16 @@ import express from "express";
 import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
+import dotenv from "dotenv";
 
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // Files to pass to your parser.sh
 // const emailFile = "./email.html";
 const systemFile = "./system.txt";
-const apiKey = "key-fff118a2c0e6d6d3b7aa01d659d2931c"
+const apiKey = process.env.MAILGUN_API_KEY;
 
 
 function runParser(emailFile: string) {
