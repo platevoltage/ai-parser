@@ -76,6 +76,13 @@ app.post("/parse-email", async (req, res) => {
         const parsedJson = JSON.parse(json);
         console.log(parsedJson);
 
+        await fs.mkdir(`./output/${parsedJson?.restaurant_name}`, { recursive: true });
+        await fs.writeFile(`./output/${parsedJson?.restaurant_name}/${new Date().toISOString()}.html`, emailHtml);
+        await fs.writeFile(`./output/${parsedJson?.restaurant_name}/${new Date().toISOString()}.json`, JSON.stringify({
+            is_delivery: parsedJson?.is_delivery ?? false,
+            identifier: parsedJson?.restaurant_name + " " + parsedJson?.pick_address.street_address,
+            job: parsedJson ?? json,
+        }, null, 2));
 
 
         res.json({
@@ -87,7 +94,8 @@ app.post("/parse-email", async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: "Error parsing email", details: error });
     } finally {
-        fs.rm(tmpFile)
+        fs.rm(tmpFile);
+
     }
 });
 
