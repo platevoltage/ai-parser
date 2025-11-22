@@ -33,40 +33,42 @@ escape_json() {
 }
 
 ESCAPED_EMAIL_CONTENT=$(escape_json "$EMAIL_CONTENT")
-ESCAPED_SYSTEM=$(escape_json "$(cat "$SYSTEM_PROMPT_FILE")")
+echo "$EMAIL_CONTENT"
 
-# Build the JSON payload using jq (avoids all manual escaping issues)
-JSON_PAYLOAD=$(jq -n \
-  --arg model "qwen3-coder:480b-cloud" \
-  --argjson email "$ESCAPED_EMAIL_CONTENT" \
-  --argjson system "$ESCAPED_SYSTEM" \
-  '
-  {
-    model: $model,
-    stream: false,
-    format: "json",
-    messages: [
-      { role: "system", content: $system },
-      { role: "user", content: $email }
-    ]
-  }
-  '
-)
+# ESCAPED_SYSTEM=$(escape_json "$(cat "$SYSTEM_PROMPT_FILE")")
 
-# Call Ollama API and stream assistant content
-curl -s -N http://localhost:11434/api/chat \
-  -H "Content-Type: application/json" \
-  -d "$JSON_PAYLOAD" \
-| jq -r 'select(.message.content != null) | .message.content' \
-| tr -d '\n' \
-| jq .
-echo
+# # Build the JSON payload using jq (avoids all manual escaping issues)
+# JSON_PAYLOAD=$(jq -n \
+#   --arg model "qwen3-coder:480b-cloud" \
+#   --argjson email "$ESCAPED_EMAIL_CONTENT" \
+#   --argjson system "$ESCAPED_SYSTEM" \
+#   '
+#   {
+#     model: $model,
+#     stream: false,
+#     format: "json",
+#     messages: [
+#       { role: "system", content: $system },
+#       { role: "user", content: $email }
+#     ]
+#   }
+#   '
+# )
 
-# End timer
-END_TIME=$(date +%s%N)
+# # Call Ollama API and stream assistant content
+# curl -s -N http://localhost:11434/api/chat \
+#   -H "Content-Type: application/json" \
+#   -d "$JSON_PAYLOAD" \
+# | jq -r 'select(.message.content != null) | .message.content' \
+# | tr -d '\n' \
+# | jq .
+# echo
 
-# Calculate elapsed time in seconds
-ELAPSED_NS=$((END_TIME - START_TIME))
-ELAPSED_SEC=$(echo "scale=3; $ELAPSED_NS/1000000000" | bc)
+# # End timer
+# END_TIME=$(date +%s%N)
 
-# echo "Execution time: ${ELAPSED_SEC}s"
+# # Calculate elapsed time in seconds
+# ELAPSED_NS=$((END_TIME - START_TIME))
+# ELAPSED_SEC=$(echo "scale=3; $ELAPSED_NS/1000000000" | bc)
+
+# # echo "Execution time: ${ELAPSED_SEC}s"

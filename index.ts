@@ -20,8 +20,8 @@ const mistral = new Mistral({
     apiKey: process.env.MISTRAL_KEY,
 });
 
-async function runMistral(emailFile: string) {
-    const message = await fs.readFile(emailFile, "utf-8");
+async function runMistral(message: string) {
+    // const message = await fs.readFile(emailFile, "utf-8");
     const systemPrompt = await fs.readFile(systemFile, "utf-8");
     const result = await mistral.chat.complete({
         model: "ministral-3b-latest",
@@ -106,7 +106,8 @@ app.post("/parse-email", async (req, res) => {
 
     // Run the parser
     try {
-        const json = await runMistral(tmpFile);
+        const text = await runParser(tmpFile);
+        const json = await runMistral(text);
         const parsedJson = JSON.parse(json);
         console.log(parsedJson);
 
@@ -146,7 +147,8 @@ app.post("/parse-email-mailgun", async (req, res) => {
 
     // Run the parser
     try {
-        const json = await runMistral(tmpFile);
+        const text = await runParser(tmpFile);
+        const json = await runMistral(text);
         const parsedJson = JSON.parse(json);
         console.log(parsedJson);
 
