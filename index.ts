@@ -10,6 +10,7 @@ const __dirname = path.dirname(__filename);
 // Files to pass to your parser.sh
 // const emailFile = "./email.html";
 const systemFile = "./system.txt";
+const apiKey = "key-fff118a2c0e6d6d3b7aa01d659d2931c"
 
 
 function runParser(emailFile: string) {
@@ -51,6 +52,8 @@ const PORT = 3010;
 // Parse JSON bodies
 // app.use(bodyParser.json());
 
+
+app.use(express.json({ limit: "10mb" }));
 app.use(express.text({ type: "*/*", limit: "10mb" }));
 
 app.get("/", (req, res) => {
@@ -98,6 +101,56 @@ app.post("/parse-email", async (req, res) => {
 
     }
 });
+
+
+app.post("/parse-email-mailgun", async (req, res) => {
+    console.log("Received JSON:", req.body);
+
+    const emailUrl = req.body["storage"]["url"][0];
+
+    const emailReq = await fetch(emailUrl, {
+        headers: {
+            "Authorization": `Basic ${Buffer.from(`api:${apiKey}`).toString("base64")}`,
+            "Accept": "application/json"
+        }
+    });
+    const emailHtml = await emailReq.text();
+
+    const tmpFile = `./${crypto.randomUUID()}.html`;
+
+    // Write email HTML to temp file for parser.sh
+    // console.log(emailHtml);
+    await fs.writeFile(tmpFile, emailHtml);
+
+    // Run the parser
+    try {
+        const json = await runParser(tmpFile);
+        const parsedJson = JSON.parse(json);
+        console.log(parsedJson);
+
+        await fs.mkdir(`./output/${parsedJson?.restaurant_name}`, { recursive: true });
+        await fs.writeFile(`./output/${parsedJson?.restaurant_name}/${new Date().toISOString()}.html`, emailHtml);
+        await fs.writeFile(`./output/${parsedJson?.restaurant_name}/${new Date().toISOString()}.json`, JSON.stringify({
+            is_delivery: parsedJson?.is_delivery ?? false,
+            identifier: parsedJson?.restaurant_name + " " + parsedJson?.pick_address.street_address,
+            job: parsedJson ?? json,
+        }, null, 2));
+
+
+        res.json({
+            // message: "Received email",
+            is_delivery: parsedJson?.is_delivery ?? false,
+            identifier: parsedJson?.restaurant_name + " " + parsedJson?.pick_address.street_address,
+            job: parsedJson ?? json,
+        });
+    } catch (error) {
+        res.status(500).json({ error: "Error parsing email", details: error });
+    } finally {
+        fs.rm(tmpFile);
+
+    }
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
