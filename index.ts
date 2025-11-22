@@ -109,7 +109,12 @@ app.post("/parse-email", async (req, res) => {
 
 app.post("/parse-email-mailgun", async (req, res) => {
     console.log("Received JSON:", req.body);
-    console.log("Received JSON:", req.body["body-html"]);
+    const decodedHtml = decodeURIComponent(req.body);
+
+    console.log("Decoded email HTML:", decodedHtml);
+    console.log("From:", req.body.From);
+    console.log("To:", req.body.To);
+    console.log("Subject:", req.body.Subject);
     const emailUrl = req.body["storage"]["url"][0];
 
     const emailReq = await fetch(emailUrl, {
