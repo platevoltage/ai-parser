@@ -5,6 +5,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 import qs from "qs";
+import { Mistral } from "@mistralai/mistralai";
 
 dotenv.config();
 
@@ -13,7 +14,32 @@ const __dirname = path.dirname(__filename);
 // Files to pass to your parser.sh
 // const emailFile = "./email.html";
 const systemFile = "./system.txt";
-const apiKey = process.env.MAILGUN_API_KEY;
+
+
+const mistral = new Mistral({
+    apiKey: process.env.MISTRAL_KEY,
+});
+
+async function runMistral(emailFile: string) {
+    const message = await fs.readFile(emailFile, "utf-8");
+    const systemPrompt = await fs.readFile(systemFile, "utf-8");
+    const result = await mistral.chat.complete({
+        model: "ministral-3b-latest",
+        temperature: 0,
+        responseFormat: { type: "json_object" },
+        messages: [
+            { content: systemPrompt, role: "system" },
+            {
+                content: message,
+                role: "user",
+            },
+        ],
+    });
+
+    console.log(result);
+    return result.choices[0].message.content;
+}
+
 
 
 function runParser(emailFile: string) {
@@ -80,7 +106,7 @@ app.post("/parse-email", async (req, res) => {
 
     // Run the parser
     try {
-        const json = await runParser(tmpFile);
+        const json = await runMistral(tmpFile);
         const parsedJson = JSON.parse(json);
         console.log(parsedJson);
 
@@ -120,7 +146,7 @@ app.post("/parse-email-mailgun", async (req, res) => {
 
     // Run the parser
     try {
-        const json = await runParser(tmpFile);
+        const json = await runMistral(tmpFile);
         const parsedJson = JSON.parse(json);
         console.log(parsedJson);
 
