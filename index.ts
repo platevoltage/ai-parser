@@ -123,17 +123,17 @@ app.post("/parse-email-mailgun", async (req, res) => {
         const json = await runParser(tmpFile);
         const parsedJson = JSON.parse(json);
         console.log(parsedJson);
+        const identifier = parsedJson?.restaurant_name + " " + parsedJson?.pick_address.street_address
 
-        const dirName = `./output/${parsedJson?.restaurant_name}-${parsedJson?.is_delivery ? "parsed" : "rejected"}`;
+        const dirName = `./output/${identifier}-${parsedJson?.is_delivery ? "parsed" : "rejected"}`;
 
         await fs.mkdir(dirName, { recursive: true });
 
         const dateStamp = new Date().toISOString();
-
         await fs.writeFile(`${dirName}/${dateStamp}.html`, emailHtml);
         await fs.writeFile(`${dirName}/${dateStamp}.json`, JSON.stringify({
             is_delivery: parsedJson?.is_delivery ?? false,
-            identifier: parsedJson?.restaurant_name + " " + parsedJson?.pick_address.street_address,
+            identifier,
             job: parsedJson ?? json,
         }, null, 2));
 
@@ -141,7 +141,7 @@ app.post("/parse-email-mailgun", async (req, res) => {
         res.json({
             // message: "Received email",
             is_delivery: parsedJson?.is_delivery ?? false,
-            identifier: parsedJson?.restaurant_name + " " + parsedJson?.pick_address.street_address,
+            identifier,
             job: parsedJson ?? json,
         });
     } catch (error) {
