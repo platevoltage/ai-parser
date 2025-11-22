@@ -4,6 +4,7 @@ import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
+import qs from "qs";
 
 dotenv.config();
 
@@ -109,12 +110,7 @@ app.post("/parse-email", async (req, res) => {
 
 app.post("/parse-email-mailgun", async (req, res) => {
     console.log("Received JSON:", req.body);
-    const decodedHtml = decodeURIComponent(req.body);
-
-    console.log("Decoded email HTML:", decodedHtml);
-    console.log("From:", req.body.From);
-    console.log("To:", req.body.To);
-    console.log("Subject:", req.body.Subject);
+    console.log("Received JSON:", qs.parse(req.body));
     const emailUrl = req.body["storage"]["url"][0];
 
     const emailReq = await fetch(emailUrl, {
