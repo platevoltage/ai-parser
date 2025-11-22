@@ -109,18 +109,8 @@ app.post("/parse-email", async (req, res) => {
 
 
 app.post("/parse-email-mailgun", async (req, res) => {
-    console.log("Received JSON:", req.body);
-    console.log("Received JSON:", qs.parse(req.body));
-    // const emailUrl = req.body["storage"]["url"][0];
 
-    // const emailReq = await fetch(emailUrl, {
-    //     headers: {
-    //         "Authorization": `Basic ${Buffer.from(`api:${apiKey}`).toString("base64")}`,
-    //         "Accept": "application/json"
-    //     }
-    // });
-    // const emailHtml = await emailReq.text();
-    const emailHtml = qs.parse(req.body)["body-html"];
+    const emailHtml = qs.parse(req.body)["body-html"] as string;
 
     const tmpFile = `./${crypto.randomUUID()}.html`;
 
@@ -134,7 +124,7 @@ app.post("/parse-email-mailgun", async (req, res) => {
         const parsedJson = JSON.parse(json);
         console.log(parsedJson);
 
-        await fs.mkdir(`./output/${parsedJson?.restaurant_name}`, { recursive: true });
+        await fs.mkdir(`./output/${parsedJson?.restaurant_name}-${parsedJson?.is_delivery ? "parsed" : "rejected"}`, { recursive: true });
         await fs.writeFile(`./output/${parsedJson?.restaurant_name}/${new Date().toISOString()}.html`, emailHtml);
         await fs.writeFile(`./output/${parsedJson?.restaurant_name}/${new Date().toISOString()}.json`, JSON.stringify({
             is_delivery: parsedJson?.is_delivery ?? false,
