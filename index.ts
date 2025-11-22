@@ -111,15 +111,16 @@ app.post("/parse-email", async (req, res) => {
 app.post("/parse-email-mailgun", async (req, res) => {
     console.log("Received JSON:", req.body);
     console.log("Received JSON:", qs.parse(req.body));
-    const emailUrl = req.body["storage"]["url"][0];
+    // const emailUrl = req.body["storage"]["url"][0];
 
-    const emailReq = await fetch(emailUrl, {
-        headers: {
-            "Authorization": `Basic ${Buffer.from(`api:${apiKey}`).toString("base64")}`,
-            "Accept": "application/json"
-        }
-    });
-    const emailHtml = await emailReq.text();
+    // const emailReq = await fetch(emailUrl, {
+    //     headers: {
+    //         "Authorization": `Basic ${Buffer.from(`api:${apiKey}`).toString("base64")}`,
+    //         "Accept": "application/json"
+    //     }
+    // });
+    // const emailHtml = await emailReq.text();
+    const emailHtml = qs.parse(req.body)["body-html"];
 
     const tmpFile = `./${crypto.randomUUID()}.html`;
 
