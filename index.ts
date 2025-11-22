@@ -124,9 +124,11 @@ app.post("/parse-email-mailgun", async (req, res) => {
         const parsedJson = JSON.parse(json);
         console.log(parsedJson);
 
-        await fs.mkdir(`./output/${parsedJson?.restaurant_name}-${parsedJson?.is_delivery ? "parsed" : "rejected"}`, { recursive: true });
-        await fs.writeFile(`./output/${parsedJson?.restaurant_name}/${new Date().toISOString()}.html`, emailHtml);
-        await fs.writeFile(`./output/${parsedJson?.restaurant_name}/${new Date().toISOString()}.json`, JSON.stringify({
+        const dirName = `./output/${parsedJson?.restaurant_name}-${parsedJson?.is_delivery ? "parsed" : "rejected"}`;
+
+        await fs.mkdir(dirName, { recursive: true });
+        await fs.writeFile(`./output/${dirName}/${new Date().toISOString()}.html`, emailHtml);
+        await fs.writeFile(`./output/${dirName}/${new Date().toISOString()}.json`, JSON.stringify({
             is_delivery: parsedJson?.is_delivery ?? false,
             identifier: parsedJson?.restaurant_name + " " + parsedJson?.pick_address.street_address,
             job: parsedJson ?? json,
