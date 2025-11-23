@@ -155,7 +155,7 @@ app.post("/parse-email-mailgun", async (req, res) => {
         const text = await runParser(tmpFile);
         const json = await runMistral(text);
         const parsedJson = JSON.parse(json);
-        console.log(parsedJson);
+        console.log(parsedJson.restaurant_name);
 
         const dirName = `./output/${parsedJson?.restaurant_name}-${parsedJson?.is_delivery ? "parsed" : "rejected"}`;
 
