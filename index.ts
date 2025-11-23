@@ -143,8 +143,9 @@ app.post("/parse-email-mailgun", async (req, res) => {
     if (!emailHtml) {
         emailHtml = request["body-text"] as string;
     }
+    console.log(emailHtml);
     const intakeEmail = request["X-Forwarded-To"] as string;
-    const subject = qs.parse(request["Subject"] as string);
+    const subject = request["Subject"] as string;
     const oldJob = request["old-results"] as string;
     if (oldJob) {
         console.error("HEY!!!", oldJob);
