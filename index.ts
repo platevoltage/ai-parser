@@ -20,7 +20,7 @@ const systemFile = "./system.txt";
 const mistral = new Mistral({
     apiKey: process.env.MISTRAL_KEY,
 });
-
+//usage: { promptTokens: 865, completionTokens: 559, totalTokens: 1424 },  
 async function runMistral(message: string) {
     // const message = await fs.readFile(emailFile, "utf-8");
     const systemPrompt = await fs.readFile(systemFile, "utf-8");
@@ -47,12 +47,10 @@ function runParser(emailFile: string) {
 
     return new Promise<string>((resolve, reject) => {
 
-        // Build the command
         const cmd = `./parser.sh ${emailFile} ${systemFile}`;
 
         console.log(`Running parser: ${cmd}\n`);
 
-        // Execute the shell script
         exec(cmd, (error, stdout, stderr) => {
             if (error) {
                 console.error(`Execution error: ${error.message}`);
@@ -65,9 +63,6 @@ function runParser(emailFile: string) {
                 reject(stderr);
             }
 
-            // Print stdout from parser.sh
-            console.log("Parser output:\n");
-            // console.log(stdout);
             resolve(stdout);
         });
 
@@ -163,7 +158,8 @@ app.post("/parse-email-mailgun", async (req, res) => {
     // Run the parser
     try {
         const text = await runParser(tmpFile);
-        const json = await runMistral(text) as string;
+        const textMinified = text.replace(/[ \t]+/g, ' ').replace(/\n{2,}/g, '\n'); // collapse double newlines
+        const json = await runMistral(textMinified) as string;
         const parsedJson = JSON.parse(json);
         console.log(parsedJson.restaurant_name);
 
