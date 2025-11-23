@@ -137,13 +137,18 @@ app.post("/parse-email", async (req, res) => {
 
 app.post("/parse-email-mailgun", async (req, res) => {
 
-    let emailHtml = qs.parse(req.body)["body-html"] as string;
+    const request = qs.parse(req.body);
+
+    let emailHtml = request["body-html"] as string;
     if (!emailHtml) {
-        emailHtml = qs.parse(req.body)["body-text"] as string;
+        emailHtml = request["body-text"] as string;
     }
-    const intakeEmail = qs.parse(req.body)["X-Forwarded-To"] as string;
-    const subject = qs.parse(req.body)["Subject"] as string;
-    const oldJob = qs.parse(req.body)["old-results"] as string;
+    const intakeEmail = request["X-Forwarded-To"] as string;
+    let subject = request["Subject"] as string;
+    if (subject) {
+        subject = decodeURIComponent(subject.replace(/\+/g, ' '));
+    }
+    const oldJob = request["old-results"] as string;
     if (oldJob) {
         console.error("HEY!!!", oldJob);
     } else {
