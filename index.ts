@@ -136,9 +136,9 @@ app.post("/parse-email", async (req, res) => {
 
 
 app.post("/parse-email-mailgun", async (req, res) => {
-
+    await fs.writeFile('./req.txt', req.body);
     const request = qs.parse(req.body);
-
+    await fs.writeFile('./reqParsed.txt', req.body);
     let emailHtml = request["body-html"] as string;
     if (!emailHtml) {
         emailHtml = request["body-text"] as string;
