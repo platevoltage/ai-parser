@@ -107,7 +107,7 @@ app.post("/parse-email", async (req, res) => {
     // Run the parser
     try {
         const text = await runParser(tmpFile);
-        const json = await runMistral(text);
+        const json = await runMistral(text) as string;
         const parsedJson = JSON.parse(json);
         // console.log(parsedJson);
 
@@ -137,8 +137,12 @@ app.post("/parse-email", async (req, res) => {
 
 app.post("/parse-email-mailgun", async (req, res) => {
 
-    const emailHtml = qs.parse(req.body)["body-html"] as string;
-
+    let emailHtml = qs.parse(req.body)["body-html"] as string;
+    if (!emailHtml) {
+        emailHtml = qs.parse(req.body)["body-text"] as string;
+    }
+    const intakeEmail = qs.parse(req.body)["X-Forwarded-To"] as string;
+    const subject = qs.parse(req.body)["Subject"] as string;
     const oldJob = qs.parse(req.body)["old-results"] as string;
     if (oldJob) {
         console.error("HEY!!!", oldJob);
@@ -155,7 +159,7 @@ app.post("/parse-email-mailgun", async (req, res) => {
     // Run the parser
     try {
         const text = await runParser(tmpFile);
-        const json = await runMistral(text);
+        const json = await runMistral(text) as string;
         const parsedJson = JSON.parse(json);
         console.log(parsedJson.restaurant_name);
 
@@ -179,6 +183,8 @@ app.post("/parse-email-mailgun", async (req, res) => {
 
         res.json({
             // message: "Received email",
+            subject: subject,
+            intake_email: intakeEmail,
             is_delivery: parsedJson?.is_delivery ?? false,
             identifier: parsedJson?.restaurant_name + " " + parsedJson?.pick_address.street_address,
             job: parsedJson ?? json,
