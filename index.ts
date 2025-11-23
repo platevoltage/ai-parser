@@ -36,7 +36,7 @@ async function runMistral(message: string) {
         ],
     });
 
-    console.log(result);
+    // console.log(result);
     return result.choices[0].message.content;
 }
 
@@ -66,7 +66,7 @@ function runParser(emailFile: string) {
 
             // Print stdout from parser.sh
             console.log("Parser output:\n");
-            console.log(stdout);
+            // console.log(stdout);
             resolve(stdout);
         });
 
@@ -109,7 +109,7 @@ app.post("/parse-email", async (req, res) => {
         const text = await runParser(tmpFile);
         const json = await runMistral(text);
         const parsedJson = JSON.parse(json);
-        console.log(parsedJson);
+        // console.log(parsedJson);
 
         await fs.mkdir(`./output/${parsedJson?.restaurant_name}`, { recursive: true });
         await fs.writeFile(`./output/${parsedJson?.restaurant_name}/${new Date().toISOString()}.html`, emailHtml);
