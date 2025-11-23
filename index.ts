@@ -139,6 +139,11 @@ app.post("/parse-email-mailgun", async (req, res) => {
 
     const emailHtml = qs.parse(req.body)["body-html"] as string;
 
+    const oldJob = qs.parse(req.body)["old-results"] as string;
+    if (oldJob) {
+        console.error("HEY!!!", oldJob);
+    }
+
     const tmpFile = `./${crypto.randomUUID()}.html`;
 
     // Write email HTML to temp file for parser.sh
