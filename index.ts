@@ -170,25 +170,24 @@ app.post("/parse-email-mailgun", async (req, res) => {
         const dateStamp = new Date().toISOString();
 
         await fs.writeFile(`${dirName}/${dateStamp}.html`, emailHtml);
-        await fs.writeFile(`${dirName}/${dateStamp}.json`, JSON.stringify({
+
+        const response = {
+            subject: subject,
+            intake_email: intakeEmail,
             is_delivery: parsedJson?.is_delivery ?? false,
             identifier: parsedJson?.restaurant_name + " " + parsedJson?.pick_address.street_address,
             job: parsedJson ?? json,
-        }, null, 2));
+        }
+
+
+        await fs.writeFile(`${dirName}/${dateStamp}.json`, JSON.stringify(response, null, 2));
 
         if (oldJob) {
             await fs.writeFile(`${dirName}/${dateStamp}.old.json`, JSON.stringify(JSON.parse(oldJob), null, 2));
         }
 
 
-        res.json({
-            // message: "Received email",
-            subject: subject,
-            intake_email: intakeEmail,
-            is_delivery: parsedJson?.is_delivery ?? false,
-            identifier: parsedJson?.restaurant_name + " " + parsedJson?.pick_address.street_address,
-            job: parsedJson ?? json,
-        });
+        res.json(response);
     } catch (error) {
         res.status(500).json({ error: "Error parsing email", details: error });
     } finally {
