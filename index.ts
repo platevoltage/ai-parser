@@ -146,7 +146,7 @@ app.post("/parse-email-mailgun", async (req, res) => {
     const intakeEmail = request["X-Forwarded-To"] as string;
     let subject = request["Subject"] as string;
     if (subject) {
-        subject = decodeURIComponent(subject.replace(/\+/g, ' '));
+        subject = subject.replace(/\+/g, ' ');
     }
     const oldJob = request["old-results"] as string;
     if (oldJob) {
