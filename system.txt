@@ -3,6 +3,7 @@ Organize this food order into JSON. This is the format. include all fields even 
             { 
                 "is_delivery": true, //sometimes messages arrive for things other than deliveries. Sometimes these are customer pickup orders. These should make this false. 
                 "restaurant_name: "Pizza Hut",
+                "provider" : "GrubHub" //This is the ordering platform.
                 "live" : true,
                 "api_token" : "1234",
                 "order_contact_name" : "Larry Bluejeans",
