@@ -173,7 +173,7 @@ app.post("/parse-email-mailgun", async (req, res) => {
         }, null, 2));
 
         if (oldJob) {
-            await fs.writeFile(`${dirName}/${dateStamp}.old.json`, oldJob);
+            await fs.writeFile(`${dirName}/${dateStamp}.old.json`, JSON.stringify(JSON.parse(oldJob)));
         }
 
 
