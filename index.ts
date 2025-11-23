@@ -142,6 +142,8 @@ app.post("/parse-email-mailgun", async (req, res) => {
     const oldJob = qs.parse(req.body)["old-results"] as string;
     if (oldJob) {
         console.error("HEY!!!", oldJob);
+    } else {
+        console.error("no old job");
     }
 
     const tmpFile = `./${crypto.randomUUID()}.html`;
