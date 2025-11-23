@@ -180,7 +180,7 @@ app.post("/parse-email-mailgun", async (req, res) => {
             await fs.mkdir(dirName, { recursive: true });
         }
         const dateStamp = new Date().toISOString();
-        dirName += dateStamp;
+        dirName += "/" + dateStamp;
         await fs.mkdir(dirName, { recursive: true });
         await fs.writeFile(`${dirName}/email.html`, emailHtml);
 
