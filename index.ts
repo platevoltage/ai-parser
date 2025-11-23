@@ -1,7 +1,7 @@
 import { exec } from "child_process";
 import express from "express";
 import fs from "fs/promises";
-import path from "path";
+import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 import qs from "qs";
@@ -163,9 +163,11 @@ app.post("/parse-email-mailgun", async (req, res) => {
         const parsedJson = JSON.parse(json);
         console.log(parsedJson.restaurant_name);
 
-        let dirName = `./output/${parsedJson?.restaurant_name}`;
+        // let dirName = `./output/${parsedJson?.restaurant_name}`;
+        let dirName = `./output/${intakeEmail}`;
+        await fs.mkdir(dirName, { recursive: true });
 
-
+        dirName += `/${parsedJson?.restaurant_name}`;
         await fs.mkdir(dirName, { recursive: true });
 
         if (parsedJson?.is_delivery) {
