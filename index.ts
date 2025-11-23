@@ -170,6 +170,10 @@ app.post("/parse-email-mailgun", async (req, res) => {
             job: parsedJson ?? json,
         }, null, 2));
 
+        if (oldJob) {
+            await fs.writeFile(`${dirName}/${oldJob}`, oldJob);
+        }
+
 
         res.json({
             // message: "Received email",
