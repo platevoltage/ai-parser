@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 import qs from "qs";
 import { Mistral } from "@mistralai/mistralai";
+import { dir } from "console";
 
 dotenv.config();
 
@@ -166,13 +167,22 @@ app.post("/parse-email-mailgun", async (req, res) => {
         const parsedJson = JSON.parse(json);
         console.log(parsedJson.restaurant_name);
 
-        const dirName = `./output/${parsedJson?.restaurant_name}-${parsedJson?.is_delivery ? "parsed" : "rejected"}`;
+        let dirName = `./output/${parsedJson?.restaurant_name}`;
+
 
         await fs.mkdir(dirName, { recursive: true });
 
+        if (parsedJson?.is_delivery) {
+            dirName += "/parsed";
+            await fs.mkdir(dirName, { recursive: true });
+        } else {
+            dirName += "/ignored";
+            await fs.mkdir(dirName, { recursive: true });
+        }
         const dateStamp = new Date().toISOString();
-
-        await fs.writeFile(`${dirName}/${dateStamp}.html`, emailHtml);
+        dirName += dateStamp;
+        await fs.mkdir(dirName, { recursive: true });
+        await fs.writeFile(`${dirName}/email.html`, emailHtml);
 
         const response = {
             subject: subject,
@@ -183,10 +193,10 @@ app.post("/parse-email-mailgun", async (req, res) => {
         }
 
 
-        await fs.writeFile(`${dirName}/${dateStamp}.json`, JSON.stringify(response, null, 2));
+        await fs.writeFile(`${dirName}/ai-parsed.json`, JSON.stringify(response, null, 2));
 
         if (oldJob) {
-            await fs.writeFile(`${dirName}/${dateStamp}.old.json`, JSON.stringify(JSON.parse(oldJob), null, 2));
+            await fs.writeFile(`${dirName}/old-job.json`, JSON.stringify(JSON.parse(oldJob), null, 2));
         }
 
 
