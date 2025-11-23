@@ -37,7 +37,7 @@ async function runMistral(message: string) {
         ],
     });
 
-    // console.log(result);
+    console.log(result);
     return result.choices[0].message.content;
 }
 
