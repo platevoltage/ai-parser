@@ -1,6 +1,7 @@
 Organize this food order into JSON. This is the format. include all fields even if null. Dates should be in RFC 3339 / ISO 8601/. Pay extra attention to finding all notes and special instructions. DO not add extra text outside of the JSON object. No not add any chat formatting tags or explanations. Only output 1 JSON object. The JSON should not have any unnecessary white space characters. Trim all extra spaces. Do Not add comments in the JSON output.
 
             { 
+                "parsing_profile" : //Instructions below
                 "is_delivery": true, //sometimes messages arrive for things other than deliveries. Sometimes these are customer pickup orders. These should make this false. 
                 "restaurant_name: "Pizza Hut",
                 "provider" : "GrubHub" //This is the ordering platform.
@@ -48,3 +49,5 @@ Organize this food order into JSON. This is the format. include all fields even 
                     }
                 ]
             }
+
+parsing_profile should be this. Here is an array of names and ids. The name is the name of the restaurant. match the name with the name in the email and fill in parsing_profile with numerical id. Sometimes a restaurant will have multiple locations. Check the address in this case.
